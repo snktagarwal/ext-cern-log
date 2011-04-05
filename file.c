@@ -25,6 +25,7 @@
 #include <linux/ext3_jbd.h>
 #include "xattr.h"
 #include "acl.h"
+#include "log_cern.h"
 
 /*
  * Called when an inode is released. Note that this is different
@@ -47,6 +48,9 @@ static int ext3_release_file (struct inode * inode, struct file * filp)
 	}
 	if (is_dx(inode) && filp->private_data)
 		ext3_htree_free_dir_info(filp->private_data);
+	
+	/* Log the release */
+	log_dmesg(filp, "Releasing");
 
 	return 0;
 }
