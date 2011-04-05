@@ -55,6 +55,17 @@ static int ext3_release_file (struct inode * inode, struct file * filp)
 	return 0;
 }
 
+
+/* Wrap generic open */
+int cern_file_open(struct inode *inode, struct file *filp){
+	
+	int retval = generic_file_open(inode, filp);
+
+	log_dmesg(filp, "Opening");
+	
+	return retval;
+}
+
 const struct file_operations ext3_file_operations = {
 	.llseek		= generic_file_llseek,
 	.read		= do_sync_read,
@@ -66,7 +77,7 @@ const struct file_operations ext3_file_operations = {
 	.compat_ioctl	= ext3_compat_ioctl,
 #endif
 	.mmap		= generic_file_mmap,
-	.open		= generic_file_open,
+	.open		= cern_file_open,	/* Cern's logging */
 	.release	= ext3_release_file,
 	.fsync		= ext3_sync_file,
 	.splice_read	= generic_file_splice_read,
