@@ -22,7 +22,11 @@ void log_dmesg(struct file *filp, char *msg){
 	/* get the filename */
 	char *log_name = filp->f_path.dentry->d_iname;
 
+	/* Get the Directory path */
+
+	const unsigned char *parent_dir = filp->f_path.dentry->d_parent->d_name.name;
+
 	/* log it to kernel log */
-	printk("%s file %s", msg, log_name);
+	printk("%s file %s with directory: %s\n", msg, log_name, parent_dir);
 	return;
 }
